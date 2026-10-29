@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.24)
+project(XmlMergeToolLauncher VERSION 3.1.0 LANGUAGES C CXX RC)
+if(NOT WIN32)
+  message(FATAL_ERROR "The single-file launcher is a Windows target")
+endif()
+if(NOT EXISTS "${PAYLOAD_ZIP}")
+  message(FATAL_ERROR "Pass -DPAYLOAD_ZIP=<deployed application zip>")
+endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+include(FetchContent)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build launcher dependencies statically" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(INSTALL_PROJECT OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(miniz
+  URL https://github.com/richgel999/miniz/archive/refs/tags/3.1.2.tar.gz
+  URL_HASH SHA256=98468f8924934b723276680f85238b6c78bf1f8b49b4459cc9b7214a20e2e9fb)
+FetchContent_MakeAvailable(miniz)
+file(TO_CMAKE_PATH "${PAYLOAD_ZIP}" PAYLOAD_RESOURCE)
+configure_file(payload.rc.in "${CMAKE_CURRENT_BINARY_DIR}/payload.rc" @ONLY)
+add_executable(XmlMergeTool WIN32 launcher.cpp "${CMAKE_CURRENT_BINARY_DIR}/payload.rc"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/windows/app.manifest")
+target_compile_definitions(XmlMergeTool PRIVATE UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN
+  MINIZ_NO_ZLIB_COMPATIBLE_NAMES)
+target_link_libraries(XmlMergeTool PRIVATE miniz shell32 ole32)
+if(MSVC)
+  target_compile_options(XmlMergeTool PRIVATE /W4 /utf-8 /permissive-)
+endif()
+# Do not put the resulting .exe inside the miniz source directory.
+set_target_properties(XmlMergeTool PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "description": "Browser acceptance tests for rf-report-cpp (development only)",
+  "scripts": {"test": "node browser.mjs"},
+  "devDependencies": {"playwright": "1.63.0"}
+}

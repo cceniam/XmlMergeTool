@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/ui">
+    <file>theme.qss</file>
+    <file>check.png</file>
+    <file>partial.png</file>
+    <file>down.png</file>
+    <file alias="logo.ico">../../resources/image/logo.ico</file>
+  </qresource>
+</RCC>

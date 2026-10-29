@@ -1,0 +1,137 @@
+name: C++ report generator
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'cpp/**'
+      - 'resources/robot/htmldata/**'
+      - 'src/**'
+      - 'tests/fixtures/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/cpp-report.yml'
+  pull_request:
+    paths:
+      - 'cpp/**'
+      - 'resources/robot/htmldata/**'
+      - 'src/**'
+      - 'tests/fixtures/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/cpp-report.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-dev zlib1g-dev
+
+      - name: Configure with GCC and libstdc++
+        run: cmake -S cpp -B build/cpp -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTING=ON -DXMLMERGETOOL_BUILD_APP=OFF
+
+      - name: Build
+        run: cmake --build build/cpp --parallel 4
+
+      - name: Run native tests
+        run: ctest --test-dir build/cpp --output-on-failure
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install locked test dependencies
+        run: uv sync --frozen --group dev
+
+      - name: Compare with Robot Framework 6.1.1
+        run: uv run --frozen --no-sync python -m pytest cpp/tests/test_compat.py -q --junitxml=build/cpp/compat-results.xml
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: rf-report-cpp-linux-x64
+          path: build/cpp/rf-report-cpp
+          if-no-files-found: error
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rf-report-cpp-linux-test-results
+          path: |
+            build/cpp/Testing/Temporary/
+            build/cpp/compat-results.xml
+          if-no-files-found: ignore
+
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare pinned native dependencies
+        shell: pwsh
+        run: |
+          $baseline = (Get-Content cpp/vcpkg.json -Raw | ConvertFrom-Json).'builtin-baseline'
+          & git -C $env:VCPKG_INSTALLATION_ROOT cat-file -e "${baseline}:versions/baseline.json" 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            & git -C $env:VCPKG_INSTALLATION_ROOT fetch origin $baseline
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Configure with the Windows SDK
+        shell: pwsh
+        run: >-
+          cmake -S cpp -B build/cpp -G "Visual Studio 17 2022" -A x64
+          "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+          -DVCPKG_TARGET_TRIPLET=x64-windows -DVCPKG_APPLOCAL_DEPS=ON -DBUILD_TESTING=ON -DXMLMERGETOOL_BUILD_APP=OFF
+
+      - name: Build
+        run: cmake --build build/cpp --config Release --parallel 4
+
+      - name: Run native tests and CLI smoke test
+        shell: pwsh
+        run: |
+          ctest --test-dir build/cpp -C Release --output-on-failure
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & ./build/cpp/Release/rf-report-cpp.exe --version
+
+      - name: Upload executable and runtime DLLs
+        uses: actions/upload-artifact@v4
+        with:
+          name: rf-report-cpp-windows-x64
+          path: |
+            build/cpp/Release/rf-report-cpp.exe
+            build/cpp/Release/*.dll
+          if-no-files-found: error
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rf-report-cpp-windows-test-results
+          path: build/cpp/Testing/Temporary/
+          if-no-files-found: ignore

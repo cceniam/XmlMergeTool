@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.1.1" schemaversion="4" rpa="false">
+ <suite name="Root &amp; 中文">
+  <meta name="z">last</meta><meta name="A">*first*</meta>
+  <suite name="Empty"><status status="PASS" starttime="20260101 00:00:00.000" endtime="20260101 00:01:00.000"/></suite>
+  <suite name="Child">
+   <test name="Cross midnight">
+    <tag>SMOKE</tag><tag>smoke</tag><tag>tag_two</tag><tag>tag two</tag><tag>robot:hidden</tag>
+    <kw name="Nested">
+     <msg level="TRACE" timestamp="20260101 23:59:59.999">trace</msg>
+     <msg level="WARN" timestamp="20260102 00:00:00.001">warning &amp; 中文</msg>
+     <status status="PASS" starttime="20260101 23:59:59.999" endtime="20260102 00:00:00.001"/>
+    </kw>
+    <status status="PASS" starttime="20260101 23:59:59.500" endtime="20260102 00:00:02.000"/>
+   </test>
+   <test name="Skipped"><status status="SKIP" starttime="N/A" endtime="N/A">why</status></test>
+   <test name="Missing times"><status status="FAIL">reason</status></test>
+   <test name="Not run"><status status="NOT RUN"/></test>
+   <status status="FAIL"/>
+  </suite>
+  <status status="PASS"/>
+ </suite>
+ <statistics><total><stat pass="999" fail="999" skip="999">deliberately stale</stat></total></statistics>
+ <errors><msg level="WARN" timestamp="20260102 00:00:00.001">warning &amp; 中文</msg><msg level="ERROR">standalone</msg></errors>
+</robot>

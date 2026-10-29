@@ -1,0 +1,67 @@
+name: Legacy Python build (manual reference only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      QT_QPA_PLATFORM: offscreen
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
+
+      - name: Install locked dependencies
+        run: uv sync --frozen --group dev
+
+      - name: Run tests
+        run: uv run --frozen --no-sync python -m pytest -q --junitxml=build/python-tests.xml
+
+      - name: Build executable with Nuitka
+        shell: pwsh
+        run: ./scripts/build_nuitka.ps1 -PythonExe .venv/Scripts/python.exe
+
+      - name: Verify build output
+        shell: pwsh
+        run: |
+          if (!(Test-Path dist/XmlMergeTool.exe)) {
+            throw "Expected dist/XmlMergeTool.exe was not produced."
+          }
+          if ((Get-Item dist/XmlMergeTool.exe).Length -eq 0) {
+            throw "Build produced an empty executable."
+          }
+          Get-ChildItem dist -Force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: XmlMergeTool-windows-x64
+          path: dist/XmlMergeTool.exe
+          if-no-files-found: error
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: XmlMergeTool-windows-test-results
+          path: build/python-tests.xml
+          if-no-files-found: ignore

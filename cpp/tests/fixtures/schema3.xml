@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.14.6 on darwin)" generated="20260929 17:57:29.256" rpa="false" schemaversion="3">
+<suite id="s1" name="Features" source="cpp/tests/fixtures/features.robot">
+<kw name="Log" library="BuiltIn" type="SETUP">
+<arg>suite setup</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.274" level="TRACE">Arguments: [ 'suite setup' ]</msg>
+<msg timestamp="20260929 17:57:29.274" level="INFO">suite setup</msg>
+<msg timestamp="20260929 17:57:29.274" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.274" endtime="20260929 17:57:29.274"/>
+</kw>
+<test id="s1-t1" name="Control Flow 中文" line="26">
+<kw name="Log" library="BuiltIn" type="SETUP">
+<arg>test setup</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.274" level="TRACE">Arguments: [ 'test setup' ]</msg>
+<msg timestamp="20260929 17:57:29.274" level="INFO">test setup</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.274" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>TRACE message</arg>
+<arg>TRACE</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ 'TRACE message' | 'TRACE' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">TRACE message</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>DEBUG message</arg>
+<arg>DEBUG</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ 'DEBUG message' | 'DEBUG' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="DEBUG">DEBUG message</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>INFO message with https://example.com/?a=1&amp;b=2</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ 'INFO message with https://example.com/?a=1&amp;b=2' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="INFO">INFO message with https://example.com/?a=1&amp;b=2</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>warning with link</arg>
+<arg>WARN</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ 'warning with link' | 'WARN' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="WARN">warning with link</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>error with link</arg>
+<arg>ERROR</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ 'error with link' | 'ERROR' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="ERROR">error with link</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>&lt;b&gt;HTML 中文&lt;/b&gt;&lt;span data-x="1"&gt;inline&lt;/span&gt;</arg>
+<arg>HTML</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ '&lt;b&gt;HTML 中文&lt;/b&gt;&lt;span data-x="1"&gt;inline&lt;/span&gt;' | 'HTML' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="INFO" html="true">&lt;b&gt;HTML 中文&lt;/b&gt;&lt;span data-x="1"&gt;inline&lt;/span&gt;</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>&lt;/script&gt;&lt;script&gt;window.injected=true&lt;/script&gt;</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Arguments: [ '&lt;/script&gt;&lt;script&gt;window.injected=true&lt;/script&gt;' ]</msg>
+<msg timestamp="20260929 17:57:29.275" level="INFO">&lt;/script&gt;&lt;script&gt;window.injected=true&lt;/script&gt;</msg>
+<msg timestamp="20260929 17:57:29.275" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<for flavor="IN RANGE">
+<var>${i}</var>
+<value>3</value>
+<iter>
+<var name="${i}">0</var>
+<if>
+<branch type="IF" condition="${i} == 0">
+<continue>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</continue>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</branch>
+<branch type="ELSE IF" condition="${i} == 1">
+<kw name="Log" library="BuiltIn">
+<arg>one</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</kw>
+<status status="NOT RUN" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</branch>
+<branch type="ELSE">
+<break>
+<status status="NOT RUN" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</break>
+<status status="NOT RUN" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</branch>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</if>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.275"/>
+</iter>
+<iter>
+<var name="${i}">1</var>
+<if>
+<branch type="IF" condition="${i} == 0">
+<continue>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</continue>
+<status status="NOT RUN" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.276"/>
+</branch>
+<branch type="ELSE IF" condition="${i} == 1">
+<kw name="Log" library="BuiltIn">
+<arg>one</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Arguments: [ 'one' ]</msg>
+<msg timestamp="20260929 17:57:29.276" level="INFO">one</msg>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</branch>
+<branch type="ELSE">
+<break>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</break>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</branch>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.276"/>
+</if>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.276"/>
+</iter>
+<iter>
+<var name="${i}">2</var>
+<if>
+<branch type="IF" condition="${i} == 0">
+<continue>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</continue>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</branch>
+<branch type="ELSE IF" condition="${i} == 1">
+<kw name="Log" library="BuiltIn">
+<arg>one</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<status status="NOT RUN" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</branch>
+<branch type="ELSE">
+<break>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</break>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</branch>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</if>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</iter>
+<status status="PASS" starttime="20260929 17:57:29.275" endtime="20260929 17:57:29.276"/>
+</for>
+<kw name="Set Variable" library="BuiltIn">
+<var>${n}</var>
+<arg>${0}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Arguments: [ 0 ]</msg>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Return: 0</msg>
+<msg timestamp="20260929 17:57:29.276" level="INFO">${n} = 0</msg>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<while condition="${n} &lt; 2" limit="4">
+<iter>
+<kw name="Evaluate" library="BuiltIn">
+<var>${n}</var>
+<arg>${n} + 1</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Arguments: [ '0 + 1' ]</msg>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Return: 1</msg>
+<msg timestamp="20260929 17:57:29.276" level="INFO">${n} = 1</msg>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</iter>
+<iter>
+<kw name="Evaluate" library="BuiltIn">
+<var>${n}</var>
+<arg>${n} + 1</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Arguments: [ '1 + 1' ]</msg>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Return: 2</msg>
+<msg timestamp="20260929 17:57:29.276" level="INFO">${n} = 2</msg>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</iter>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</while>
+<try>
+<branch type="TRY">
+<kw name="Fail" library="BuiltIn">
+<arg>expected failure</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<msg timestamp="20260929 17:57:29.276" level="TRACE">Arguments: [ 'expected failure' ]</msg>
+<msg timestamp="20260929 17:57:29.276" level="FAIL">expected failure</msg>
+<msg timestamp="20260929 17:57:29.276" level="DEBUG">Traceback (most recent call last):
+  None
+AssertionError: expected failure</msg>
+<status status="FAIL" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.276"/>
+</kw>
+<status status="FAIL" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.277"/>
+</branch>
+<branch type="EXCEPT" variable="${err}" pattern_type="GLOB">
+<pattern>expected*</pattern>
+<kw name="Log" library="BuiltIn">
+<arg>${err}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'expected failure' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">expected failure</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log" library="BuiltIn">
+<arg>not executed</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<status status="NOT RUN" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</branch>
+<branch type="FINALLY">
+<kw name="Log" library="BuiltIn">
+<arg>finally</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'finally' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">finally</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</branch>
+<status status="PASS" starttime="20260929 17:57:29.276" endtime="20260929 17:57:29.277"/>
+</try>
+<kw name="Nested Return">
+<var>${value}</var>
+<tag>kw-tag</tag>
+<tag>kw_tag</tag>
+<doc>[image.png|Screenshot] [https://example.com|image.png]</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [  ]</msg>
+<kw name="Log" library="BuiltIn">
+<arg>nested</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'nested' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">nested</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<return>
+<value>returned</value>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</return>
+<kw name="Log" library="BuiltIn" type="TEARDOWN">
+<arg>keyword teardown</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'keyword teardown' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">keyword teardown</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: 'returned'</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">${value} = returned</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<arg>${value}</arg>
+<arg>returned</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'returned' | 'returned' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="DEBUG">Argument types are:
+&lt;class 'str'&gt;
+&lt;class 'str'&gt;</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<kw name="Log" library="BuiltIn" type="TEARDOWN">
+<arg>test teardown</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'test teardown' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="INFO">test teardown</msg>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<doc>ordinary paragraph
+second line
+
+== Subheader ==</doc>
+<tag>robot:private</tag>
+<tag>smoke</tag>
+<tag>tag_two</tag>
+<status status="PASS" starttime="20260929 17:57:29.274" endtime="20260929 17:57:29.277"/>
+</test>
+<test id="s1-t2" name="Skipped Test" line="63">
+<kw name="Skip" library="BuiltIn">
+<arg>skipped 中文</arg>
+<doc>Skips the rest of the current test.</doc>
+<msg timestamp="20260929 17:57:29.277" level="TRACE">Arguments: [ 'skipped 中文' ]</msg>
+<msg timestamp="20260929 17:57:29.277" level="SKIP">skipped 中文</msg>
+<msg timestamp="20260929 17:57:29.277" level="DEBUG">Traceback (most recent call last):
+  None
+robot.api.exceptions.SkipExecution: skipped 中文</msg>
+<status status="SKIP" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277"/>
+</kw>
+<tag>skip-tag</tag>
+<status status="SKIP" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.277">skipped 中文</status>
+</test>
+<test id="s1-t3" name="Failed Test" line="67">
+<kw name="Fail" library="BuiltIn">
+<arg>*HTML* &lt;b&gt;failure 中文&lt;/b&gt;</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Arguments: [ '*HTML* &lt;b&gt;failure 中文&lt;/b&gt;' ]</msg>
+<msg timestamp="20260929 17:57:29.278" level="FAIL" html="true">&lt;b&gt;failure 中文&lt;/b&gt;</msg>
+<msg timestamp="20260929 17:57:29.278" level="DEBUG">Traceback (most recent call last):
+  None
+AssertionError: *HTML* &lt;b&gt;failure 中文&lt;/b&gt;</msg>
+<status status="FAIL" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278"/>
+</kw>
+<tag>smoke</tag>
+<status status="FAIL" starttime="20260929 17:57:29.277" endtime="20260929 17:57:29.278">*HTML* &lt;b&gt;failure 中文&lt;/b&gt;</status>
+</test>
+<test id="s1-t4" name="Setup Failed" line="71">
+<kw name="Fail" library="BuiltIn" type="SETUP">
+<arg>setup failure</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Arguments: [ 'setup failure' ]</msg>
+<msg timestamp="20260929 17:57:29.278" level="FAIL">setup failure</msg>
+<msg timestamp="20260929 17:57:29.278" level="DEBUG">Traceback (most recent call last):
+  None
+AssertionError: setup failure</msg>
+<status status="FAIL" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278"/>
+</kw>
+<status status="FAIL" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278">Setup failed:
+setup failure</status>
+</test>
+<test id="s1-t5" name="Teardown Failed" line="75">
+<kw name="No Operation" library="BuiltIn">
+<doc>Does absolutely nothing.</doc>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Arguments: [  ]</msg>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278"/>
+</kw>
+<kw name="Fail" library="BuiltIn" type="TEARDOWN">
+<arg>teardown failure</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Arguments: [ 'teardown failure' ]</msg>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Return: None</msg>
+<msg timestamp="20260929 17:57:29.278" level="FAIL">teardown failure</msg>
+<msg timestamp="20260929 17:57:29.278" level="DEBUG">Traceback (most recent call last):
+  None
+AssertionError: teardown failure</msg>
+<status status="FAIL" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278">teardown failure</status>
+</kw>
+<status status="FAIL" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278">Teardown failed:
+teardown failure</status>
+</test>
+<kw name="Log" library="BuiltIn" type="TEARDOWN">
+<arg>suite teardown</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Arguments: [ 'suite teardown' ]</msg>
+<msg timestamp="20260929 17:57:29.278" level="INFO">suite teardown</msg>
+<msg timestamp="20260929 17:57:29.278" level="TRACE">Return: None</msg>
+<status status="PASS" starttime="20260929 17:57:29.278" endtime="20260929 17:57:29.278"/>
+</kw>
+<doc>= 标题 =
+
+*粗体* _斜体_ ``代码`` &amp; &lt;literal&gt; "quotes"
+
+- item one
+continued
+- item two
+
+| = Name = | = Value = |
+| hello | 中文 |
+| ragged |
+
+| preformatted
+| indented
+
+[https://example.com | link] https://example.com/a.png
+
+---</doc>
+<meta name="alpha">*metadata*</meta>
+<meta name="Zeta">最后</meta>
+<status status="FAIL" starttime="20260929 17:57:29.256" endtime="20260929 17:57:29.279"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="3" skip="1">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="0" skip="1">skip-tag</stat>
+<stat pass="1" fail="1" skip="0">smoke</stat>
+<stat pass="1" fail="0" skip="0">tag_two</stat>
+</tag>
+<suite>
+<stat pass="1" fail="3" skip="1" id="s1" name="Features">Features</stat>
+</suite>
+</statistics>
+<errors>
+<msg timestamp="20260929 17:57:29.275" level="WARN">warning with link</msg>
+<msg timestamp="20260929 17:57:29.275" level="ERROR">error with link</msg>
+</errors>
+</robot>

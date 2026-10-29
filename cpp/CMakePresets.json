@@ -1,0 +1,36 @@
+{
+  "version": 5,
+  "cmakeMinimumRequired": {"major": 3, "minor": 24, "patch": 0},
+  "configurePresets": [
+    {
+      "name": "desktop", "displayName": "Native Qt desktop (Release)",
+      "generator": "Ninja", "binaryDir": "${sourceDir}/../build/desktop",
+      "cacheVariables": {"CMAKE_BUILD_TYPE": "Release", "BUILD_TESTING": "ON", "XMLMERGETOOL_BUILD_APP": "ON"}
+    },
+    {
+      "name": "report", "displayName": "Standalone report engine",
+      "generator": "Ninja", "binaryDir": "${sourceDir}/../build/report",
+      "cacheVariables": {"CMAKE_BUILD_TYPE": "Release", "BUILD_TESTING": "ON", "XMLMERGETOOL_BUILD_APP": "OFF"}
+    },
+    {
+      "name": "windows", "displayName": "Windows x64 desktop",
+      "generator": "Visual Studio 17 2022", "architecture": "x64",
+      "binaryDir": "${sourceDir}/../build/windows",
+      "cacheVariables": {
+        "BUILD_TESTING": "ON", "XMLMERGETOOL_BUILD_APP": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows", "VCPKG_APPLOCAL_DEPS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {"name": "desktop", "configurePreset": "desktop"},
+    {"name": "report", "configurePreset": "report"},
+    {"name": "windows", "configurePreset": "windows", "configuration": "Release"}
+  ],
+  "testPresets": [
+    {"name": "desktop", "configurePreset": "desktop", "output": {"outputOnFailure": true}},
+    {"name": "report", "configurePreset": "report", "output": {"outputOnFailure": true}},
+    {"name": "windows", "configurePreset": "windows", "configuration": "Release", "output": {"outputOnFailure": true}}
+  ]
+}

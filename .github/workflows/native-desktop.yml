@@ -1,0 +1,182 @@
+name: Native desktop
+on:
+  push:
+    branches: ['main']
+    tags: ['3.1.0']
+    paths: ['cpp/**', 'resources/**', 'scripts/**', 'src/**', 'tests/**', '.github/workflows/native-desktop.yml']
+  pull_request:
+    paths: ['cpp/**', 'resources/**', 'scripts/**', 'src/**', 'tests/**', '.github/workflows/native-desktop.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: native-desktop-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            qt_arch: clang_64
+            name: macos-arm64
+          - os: windows-2022
+            qt_arch: win64_msvc2022_64
+            name: windows-x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.11.2'
+          # The 3.3.0 release predates Qt 6.11's Windows repository layout.
+          # Pin the upstream fix instead of following the development branch.
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@076e1659807d0b362a3ed684d54c2e9c775eb9c7'
+          arch: ${{ matrix.qt_arch }}
+          cache: true
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
+        with:
+          python-version: '3.13'
+          enable-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test-only dependencies
+        run: uv sync --frozen --group dev
+      - name: Build and package macOS
+        id: build-macos
+        if: runner.os == 'macOS'
+        run: ./scripts/build_macos.sh
+      - name: Build and package Windows
+        id: build-windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        # Run validation independently below so a failing check does not hide
+        # results from the other checks. Artifact upload still requires all.
+        run: ./scripts/build_windows.ps1 -SkipTests
+      - name: Windows native and Qt tests
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ctest --test-dir build/windows -C Release --output-on-failure
+      - name: Python and native differential tests
+        if: ${{ !cancelled() && (steps.build-macos.outcome == 'success' || steps.build-windows.outcome == 'success') }}
+        shell: bash
+        run: |
+          # The retained Python UI uses its locked PyQt runtime, not the
+          # native application's independently installed Qt SDK plugins.
+          unset QT_PLUGIN_PATH QT_QPA_PLATFORM_PLUGIN_PATH
+          if [ "$RUNNER_OS" = Windows ]; then
+            export RF_REPORT_CPP="$PWD/build/windows/Release/rf-report-cpp.exe"
+            export XML_MERGE_DRIVER="$PWD/build/windows/Release/xml-merge-driver.exe"
+          else
+            export RF_REPORT_CPP="$PWD/build/desktop/rf-report-cpp"
+            export XML_MERGE_DRIVER="$PWD/build/desktop/xml-merge-driver"
+          fi
+          QT_QPA_PLATFORM=offscreen uv run --frozen --no-sync python -m pytest tests cpp/tests/test_compat.py cpp/tests/test_app_compat.py -q --junitxml=build/native-results.xml
+      - name: Smoke-test the distributed artifact without developer PATH
+        if: ${{ !cancelled() && (steps.build-macos.outcome == 'success' || steps.build-windows.outcome == 'success') }}
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then
+            uv run --frozen --no-sync python cpp/tests/test_package.py dist/native/XmlMergeTool.exe
+          else
+            uv run --frozen --no-sync python cpp/tests/test_package.py dist/native/XmlMergeTool.app/Contents/MacOS/XmlMergeTool
+          fi
+      - name: Verify offline reports and split-log loading in Chromium
+        if: ${{ !cancelled() && (steps.build-macos.outcome == 'success' || steps.build-windows.outcome == 'success') }}
+        shell: bash
+        run: |
+          npm ci --prefix cpp/tests
+          node cpp/tests/node_modules/playwright/cli.js install chromium
+          if [ "$RUNNER_OS" = Windows ]; then
+            report_exe="$PWD/build/windows/Release/rf-report-cpp.exe"
+          else
+            report_exe="$PWD/build/desktop/rf-report-cpp"
+          fi
+          uv run --frozen --no-sync python cpp/tests/browser_acceptance.py --executable "$report_exe" --outputdir build/browser-acceptance --browser-channel chromium
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: XmlMergeTool-${{ matrix.name }}
+          path: |
+            dist/native/*.zip
+            dist/native/*.exe
+          if-no-files-found: error
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-${{ matrix.name }}
+          path: |
+            build/native-results.xml
+            build/package-validation/
+            build/browser-acceptance/
+            build/desktop/Testing/Temporary/
+            build/windows/Testing/Temporary/
+            build/windows/vcpkg-manifest-install.log
+          if-no-files-found: ignore
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/tags/3.1.0'
+    needs: desktop
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Download validated GUI applications from this run
+        uses: actions/download-artifact@v4
+        with:
+          pattern: XmlMergeTool-*
+          path: release-assets
+          merge-multiple: true
+      - name: Verify applications and write checksums
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          import zipfile
+
+          root = Path('release-assets')
+          names = ['XmlMergeTool.exe', 'XmlMergeTool-macos-arm64.zip']
+          assert sorted(p.name for p in root.iterdir()) == sorted(names), 'Unexpected release assets'
+          for name in names:
+              path = root / name
+              assert path.is_file() and path.stat().st_size > 0, f'Missing application: {name}'
+          assert (root / names[0]).read_bytes()[:2] == b'MZ', 'Invalid Windows executable'
+          with zipfile.ZipFile(root / names[1]) as archive:
+              assert 'XmlMergeTool.app/Contents/MacOS/XmlMergeTool' in archive.namelist(), 'Missing macOS application'
+              assert archive.testzip() is None, 'Corrupt macOS archive'
+          (root / 'SHA256SUMS.txt').write_text(''.join(
+              f'{hashlib.sha256((root / name).read_bytes()).hexdigest()}  {name}\n' for name in names
+          ), encoding='utf-8')
+          PY
+      - name: Publish 3.1.0 without replacing an existing release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api "repos/$GITHUB_REPOSITORY/commits/3.1.0" --jq .sha)" = "$GITHUB_SHA"
+          if gh release view 3.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release 3.1.0 already exists; refusing to replace it.' >&2
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          XMLMergeTool 3.1.0 adds selected-suite XML export to the native C++ and Qt desktop application.
+
+          - Merge highlighted suites into one XML file in a chosen directory from the context menu.
+          - Keep checked suites and the global output directory unchanged during this export.
+          - Add a numeric suffix when the output filename already exists and protect source XML files from overwrite.
+          - Open a source file's directory directly from the context menu.
+
+          Windows x64 and macOS Apple Silicon GUI packages passed automated native, Python differential, package, and offline browser checks in this tag's workflow. No manual desktop click acceptance was performed. The macOS app is ad-hoc signed, not notarized.
+          NOTES
+          printf '\nSource commit: `%s`\n' "$GITHUB_SHA" >> release-notes.md
+          gh release create 3.1.0 --repo "$GITHUB_REPOSITORY" --verify-tag \
+            --title 'XMLMergeTool 3.1.0' --notes-file release-notes.md \
+            release-assets/XmlMergeTool.exe \
+            release-assets/XmlMergeTool-macos-arm64.zip \
+            release-assets/SHA256SUMS.txt
